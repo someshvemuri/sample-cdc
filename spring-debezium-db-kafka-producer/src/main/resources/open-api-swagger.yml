@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Product-API
+  description: This is a API for add product to catalog
+  version: 1.0.0
+  contact:
+    name: Lewis Florez
+    url: https://github.com/gasperlf
+    email: gasper_lf@hotmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: https://localhost:9999
+    description: Local execution
+tags:
+  - name: Products
+    description: Product Controller
+paths:
+  /products:
+    post:
+      tags:
+        - Products
+      summary: Add product
+      operationId: createProduct
+      description: Add new product in the catalog
+      requestBody:
+        $ref: '#/components/requestBodies/ProductRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/ProductResponseBody'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  parameters:
+    productIdPath:
+      name: productId
+      in: path
+      description: product identifier
+      required: true
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    ProductRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductRequest'
+  responses:
+    Created:
+      description: Created
+    NoContent:
+      description: No Content
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+    ProductResponseBody:
+      description: ProductResponse
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductResponse'
+  schemas:
+    ProblemDetail:
+      title: ProblemDetail
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+    Product:
+      title: Product
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: integer
+          format: int32
+    ProductRequest:
+      title: ProductRequest
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Product"
+    ProductResponse:
+      title: ProductResponse
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Product"
+      properties:
+        id:
+          type: integer
+          format: int64

@@ -1,0 +1,18 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: spring-debezium-db-kafka-consumer
+  kafka:
+    bootstrap-servers: "127.0.0.1:29092"
+    consumer:
+      group-id: my-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: com.learning.cdc.debezium.db.kafka.impl.deserializer.ProductMessageDeserializer
+      auto-offset-reset: earliest
+
+app:
+  kafka:
+    topic: product.public.product
+    group-id: my-group
